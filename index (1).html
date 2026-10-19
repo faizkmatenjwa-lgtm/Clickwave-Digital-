@@ -1,0 +1,118 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Clickwave Digital OS</title><link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon.svg"><meta name="theme-color" content="#090B10">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+:root{--bg:#090B10;--sb:#0D1017;--card:#121722;--el:#181E2A;--tx:#F3F5F8;--t2:#969EAE;--t3:#697386;--g:#D6B46A;--g2:#E8CA87;--bd:#252C39;--ok:#43C58A;--wa:#F1B95B;--er:#F16F78;--in:#75A9FF}
+*{box-sizing:border-box;margin:0}body{font:14px Inter,system-ui,sans-serif;background:var(--bg);color:var(--tx);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+button,input,select,textarea{font:inherit;color:inherit}
+#app{display:flex;min-height:100vh}
+aside{width:250px;background:var(--sb);border-right:1px solid var(--bd);padding:16px 12px;position:fixed;inset:0 auto 0 0;display:flex;flex-direction:column;overflow:auto;z-index:20;transition:.2s}
+.logo{font-weight:700;font-size:16px;padding:8px;color:var(--g)}.logo small{display:block;color:var(--t3);font-weight:400;font-size:11px}
+aside h6{color:var(--t3);font-size:10px;letter-spacing:.1em;margin:16px 8px 6px}
+aside a{display:block;padding:9px 10px;border-radius:8px;color:var(--t2);cursor:pointer}aside a:hover{background:var(--el)}aside a.on{background:#D6B46A1f;color:var(--g)}
+main{margin-left:250px;flex:1;padding:20px;min-width:0}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:18px}.top h1{font-size:22px;flex:1}#mb{display:none}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:14px}
+.kpi b{display:block;font-size:22px;margin-top:6px;color:var(--g)}.kpi span{color:var(--t2);font-size:12px}
+.btn{background:var(--el);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;cursor:pointer}.btn.p{background:var(--g);color:#090B10;border:0;font-weight:600}.btn.p:hover{background:var(--g2)}.btn.d{color:var(--er)}
+input,select,textarea{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;width:100%}input:focus,select:focus,textarea:focus{outline:1px solid var(--g)}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}.bar input,.bar select{width:auto;flex:1;min-width:130px}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--bd);white-space:nowrap}th{color:var(--t3);font-weight:500;font-size:12px}tr.r{cursor:pointer}tr.r:hover{background:var(--el)}
+.tag{background:var(--el);border:1px solid var(--bd);border-radius:20px;padding:2px 9px;font-size:12px}
+.em{color:var(--t3);text-align:center;padding:30px}
+.kb{display:flex;gap:10px;overflow-x:auto;padding-bottom:10px}.col{min-width:220px;width:220px;background:var(--sb);border:1px solid var(--bd);border-radius:12px;padding:10px}.col h4{font-size:12px;color:var(--t2);margin-bottom:8px}
+.ct{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px;margin-bottom:8px}.ct small{color:var(--t2);display:block;margin:3px 0}.ct select{padding:4px;margin-top:6px;font-size:12px}
+.fb{height:8px;background:var(--g);border-radius:4px}
+#md{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:50;padding:12px}#md>form{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:18px;width:100%;max-width:520px;max-height:90vh;overflow:auto}
+label{display:block;color:var(--t2);font-size:12px;margin:10px 0 4px}
+#au{max-width:380px;margin:12vh auto;padding:20px}#au .btn{width:100%;margin-top:10px}
+#tt{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--el);border:1px solid var(--g);padding:10px 16px;border-radius:10px;display:none;z-index:99}
+@media(max-width:800px){aside{transform:translateX(-100%)}aside.o{transform:none}main{margin-left:0;padding:14px}#mb{display:block}}
+</style></head><body>
+<div id="au" class="card" style="display:none"><div class="logo" style="font-size:20px">Clickwave Digital OS<small>Private agency operating system</small></div>
+<label>Email</label><input id="em" type="email" autocomplete="email"><label>Password (min 6)</label><input id="pw" type="password" autocomplete="current-password">
+<button class="btn p" onclick="auth('in')">Log in</button><button class="btn" onclick="auth('up')">Sign up</button><button class="btn" onclick="goog()">Continue with Google</button><p id="ae" style="color:var(--er);margin-top:10px"></p></div>
+<div id="app" style="display:none"><aside id="sb"></aside><main><div class="top"><button class="btn" id="mb" onclick="sb_.classList.toggle('o')">☰</button><h1 id="ti"></h1><span id="ac"></span></div><div id="v"></div></main></div>
+<div id="md"></div><div id="tt"></div>
+<script src="config.js"></script>
+<script>
+const db=supabase.createClient(SUPA_URL,SUPA_KEY),$=s=>document.querySelector(s),sb_=$("#sb");
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const kes=n=>"KES "+Number(n||0).toLocaleString();
+const LS=["New","Researching","Qualified","Ready to Contact","Contacted","Responded","Interested","Meeting Scheduled","Proposal Sent","Negotiation","Won","Lost","Not Interested","Do Not Contact"];
+const PS=["Qualified","Contacted","Interested","Meeting Scheduled","Proposal Sent","Negotiation","Won","Lost"];
+const PR=["Low","Medium","High"],TS=["To Do","In Progress","Waiting","Completed","Cancelled"];
+// field: [key,label,type,options,]  first field is the title and required
+const M={
+leads:{t:"Leads",f:[["business","Business name"],["industry","Industry"],["contact","Contact person"],["phone","Phone"],["email","Email","email"],["website","Website"],["source","Lead source","select",["Referral","WhatsApp","Instagram","Facebook","Google Maps","Cold call","Website","Other"]],["status","Status","select",LS],["priority","Priority","select",PR],["value","Estimated deal value (KES)","number"],["last","Last contacted","date"],["follow","Next follow-up","date"],["notes","Notes","textarea"]],c:["business","contact","phone","status","follow","value"]},
+outreach:{t:"Outreach",f:[["lead","Lead","ref","leads"],["channel","Channel","select",["WhatsApp","Phone call","Email","SMS","Instagram","Facebook","LinkedIn","In person","Other"]],["dir","Direction","select",["Outbound","Inbound"]],["date","Date","date"],["outcome","Outcome","select",["No answer","Message sent","Replied","Interested","Not interested","Call requested","Meeting booked","Wrong contact","Do not contact"]],["summary","Message summary","textarea"],["next","Next follow-up","date"]],c:["lead","channel","outcome","date","next"]},
+clients:{t:"Clients",f:[["name","Client / business name"],["contact","Contact person"],["phone","Phone"],["email","Email","email"],["status","Status","select",["Prospect","Onboarding","Active","Paused","Completed","Former Client"]],["services","Services purchased"],["mrr","Monthly recurring revenue (KES)","number"],["since","Date acquired","date"],["notes","Notes","textarea"]],c:["name","contact","phone","status","mrr"]},
+projects:{t:"Website Projects",f:[["name","Project name"],["client","Client","ref","clients"],["type","Type","select",["Business website","Landing page","E-commerce","Redesign","Booking website","Portfolio","Web app","Maintenance"]],["status","Stage","select",["Awaiting Payment/Approval","Onboarding","Requirements","Design","Development","Internal Review","Client Review","Revisions","Final Approval","Deployment","Completed","On Hold"]],["priority","Priority","select",PR],["start","Start date","date"],["deadline","Deadline","date"],["budget","Budget (KES)","number"],["progress","Progress %","number"],["preview","Preview URL"],["live","Production URL"],["notes","Notes (no passwords!)","textarea"]],c:["name","client","status","deadline","budget","progress"]},
+campaigns:{t:"Advertising",f:[["name","Campaign name"],["client","Client","ref","clients"],["platform","Platform","select",["Meta Ads","Google Ads","TikTok Ads","LinkedIn Ads","Other"]],["status","Status","select",["Draft","Active","Paused","Completed"]],["fee","Monthly management fee (KES)","number"],["budget","Client ad budget (KES)","number"],["spend","Spend (KES)","number"],["impr","Impressions","number"],["clicks","Clicks","number"],["leads","Leads / conversions","number"],["notes","Notes (manually entered data)","textarea"]],c:["name","client","platform","status","spend","leads"]},
+tasks:{t:"Tasks",f:[["title","Task title"],["status","Status","select",TS],["priority","Priority","select",PR],["due","Due date","date"],["remind","Reminder date","date"],["desc","Description","textarea"]],c:["title","status","priority","due"]},
+invoices:{t:"Invoices",f:[["no","Invoice number"],["client","Client","ref","clients"],["issue","Issue date","date"],["due","Due date","date"],["cur","Currency","select",["KES","USD"]],["amount","Total amount","number"],["status","Status","select",["Draft","Sent","Cancelled"]],["notes","Notes","textarea"]],c:["no","client","due","amount","status"]},
+payments:{t:"Payments",f:[["ref","Reference / note"],["invoice","Invoice","ref","invoices"],["amount","Amount","number"],["date","Payment date","date"],["method","Method","select",["M-Pesa","Bank","Cash","Card","Other"]]],c:["ref","invoice","amount","date","method"]},
+expenses:{t:"Expenses",f:[["name","Expense"],["cat","Category","select",["Software","Ads","Hosting/Domains","Transport","Salaries","Other"]],["amount","Amount (KES)","number"],["date","Date","date"],["vendor","Vendor"],["notes","Notes","textarea"]],c:["name","cat","amount","date","vendor"]}};
+const NAV=[["MAIN",["overview","leads","outreach","pipeline","clients"]],["DELIVERY",["projects","campaigns","tasks"]],["BUSINESS",["invoices","payments","expenses"]],["SYSTEM",["settings"]]];
+const NM={overview:"Overview",pipeline:"Sales Pipeline",settings:"Settings"};
+let D={},R="overview",Q="",FS="",user;
+const name=k=>NM[k]||M[k].t;
+const rows=k=>D[k]||[];
+const lab=(k,id)=>{const r=rows(k).find(x=>x.id==id);return r?r.data[M[k].f[0][0]]:"—"};
+function toast(m){const t=$("#tt");t.textContent=m;t.style.display="block";setTimeout(()=>t.style.display="none",2500)}
+async function load(){const {data,error}=await db.from("records").select("*").order("created_at",{ascending:false});if(error){toast("Load failed: "+error.message);return}
+D={};data.forEach(r=>(D[r.kind]=D[r.kind]||[]).push(r))}
+async function auth(m){const e=$("#em").value,p=$("#pw").value;$("#ae").textContent="";
+const {error}=m=="in"?await db.auth.signInWithPassword({email:e,password:p}):await db.auth.signUp({email:e,password:p});
+if(error)$("#ae").textContent=error.message;else if(m=="up")$("#ae").textContent="Check your email to confirm, then log in."}
+const goog=()=>db.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.href.split("#")[0]}});
+async function boot(s){user=s?.user;$("#au").style.display=user?"none":"block";$("#app").style.display=user?"flex":"none";if(!user)return;await load();nav();go(R)}
+function nav(){sb_.innerHTML=`<div class="logo">Clickwave Digital<small>Digital OS</small></div>`+NAV.map(([g,a])=>`<h6>${g}</h6>`+a.map(k=>`<a data-k="${k}" onclick="go('${k}')">${name(k)}</a>`).join("")).join("")+`<div style="flex:1"></div><small style="color:var(--t3);padding:8px">${esc(user.email)}</small><a onclick="db.auth.signOut()">Log out</a>`}
+function go(k){R=k;Q="";FS="";sb_.classList.remove("o");document.querySelectorAll("aside a[data-k]").forEach(a=>a.classList.toggle("on",a.dataset.k==k));draw()}
+function draw(){$("#ti").textContent=name(R);$("#ac").innerHTML=M[R]?`<button class="btn" onclick="csv('${R}')">Export CSV</button> <button class="btn p" onclick="edit('${R}')">+ Add</button>`:"";
+$("#v").innerHTML=R=="overview"?ov():R=="pipeline"?pipe():R=="settings"?sett():list(R)}
+const cell=(k,f,v)=>f[2]=="ref"?esc(lab(f[3],v)):f[2]=="number"&&/value|amount|budget|spend|fee|mrr/.test(f[0])?kes(v):f[0]=="status"||f[0]=="outcome"?`<span class="tag">${esc(v||"—")}</span>`:esc(v||"—");
+function list(k){const m=M[k],sf=m.f.find(f=>f[0]=="status"&&f[2]=="select");let rs=rows(k).filter(r=>(!Q||JSON.stringify(Object.values(r.data)).toLowerCase().includes(Q))&&(!FS||r.data.status==FS));
+return `<div class="bar"><input placeholder="Search…" value="${esc(Q)}" oninput="Q=this.value.toLowerCase();rl()">${sf?`<select onchange="FS=this.value;rl()"><option value="">All statuses</option>${sf[3].map(o=>`<option ${o==FS?"selected":""}>${o}</option>`).join("")}</select>`:""}</div><div class="card tw" id="tb">${tbl(k,rs)}</div>`}
+function tbl(k,rs){const m=M[k],cs=m.c.map(c=>m.f.find(f=>f[0]==c));if(!rs.length)return `<div class="em">No ${m.t.toLowerCase()} yet. Tap “+ Add” to create the first one.</div>`;
+return `<table><tr>${cs.map(f=>`<th>${f[1]}</th>`).join("")}</tr>${rs.map(r=>`<tr class="r" onclick="edit('${k}','${r.id}')">${cs.map(f=>`<td>${cell(k,f,r.data[f[0]])}</td>`).join("")}</tr>`).join("")}</table>`}
+function rl(){const k=R,rs=rows(k).filter(r=>(!Q||JSON.stringify(Object.values(r.data)).toLowerCase().includes(Q))&&(!FS||r.data.status==FS));$("#tb").innerHTML=tbl(k,rs)}
+function edit(k,id){const m=M[k],r=id?rows(k).find(x=>x.id==id):{data:{}};
+$("#md").innerHTML=`<form onsubmit="return save(event,'${k}','${id||""}')"><h3 style="margin-bottom:6px">${id?"Edit":"New"} ${m.t.replace(/s$/,"")}</h3>`+m.f.map((f,i)=>{const v=r.data[f[0]]??(f[2]=="select"?"":"");const n=`name="${f[0]}"`;
+let h=f[2]=="select"?`<select ${n}><option value="">—</option>${f[3].map(o=>`<option ${o==v?"selected":""}>${o}</option>`).join("")}</select>`:f[2]=="ref"?`<select ${n}><option value="">—</option>${rows(f[3]).map(o=>`<option value="${o.id}" ${o.id==v?"selected":""}>${esc(o.data[M[f[3]].f[0][0]])}</option>`).join("")}</select>`:f[2]=="textarea"?`<textarea ${n} rows="3">${esc(v)}</textarea>`:`<input ${n} type="${f[2]||"text"}" value="${esc(v)}" ${i==0?"required":""}>`;
+return `<label>${f[1]}</label>`+h}).join("")+`<div style="display:flex;gap:8px;margin-top:16px"><button class="btn p" style="flex:1">Save</button><button type="button" class="btn" onclick="cm()">Cancel</button>${id?`<button type="button" class="btn d" onclick="del('${k}','${id}')">Delete</button>`:""}</div></form>`;$("#md").style.display="flex"}
+const cm=()=>$("#md").style.display="none";
+const nz=s=>String(s||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+async function save(e,k,id){e.preventDefault();const d={};new FormData(e.target).forEach((v,n)=>d[n]=v);
+if(k=="leads"&&!id){const dup=rows("leads").find(r=>nz(r.data.business)==nz(d.business)||(d.email&&nz(r.data.email)==nz(d.email))||(d.phone&&nz(r.data.phone)==nz(d.phone)));if(dup&&!confirm("Possible duplicate of “"+dup.data.business+"”. Save anyway?"))return false}
+if(d.status=="Completed"&&k=="tasks")d.done=new Date().toISOString();
+const q=id?db.from("records").update({data:d,updated_at:new Date().toISOString()}).eq("id",id):db.from("records").insert({kind:k,data:d});
+const {error}=await q;if(error){toast("Error: "+error.message);return false}
+if(k=="outreach"&&d.lead){const l=rows("leads").find(x=>x.id==d.lead);if(l){const nd={...l.data,last:d.date||l.data.last,follow:d.next||l.data.follow};if(d.outcome=="Do not contact")nd.status="Do Not Contact";await db.from("records").update({data:nd}).eq("id",l.id)}}
+cm();await load();draw();toast("Saved");return false}
+async function del(k,id){if(!confirm("Delete this record permanently?"))return;const {error}=await db.from("records").delete().eq("id",id);if(error)return toast(error.message);cm();await load();draw();toast("Deleted")}
+function csv(k){const m=M[k],h=m.f.map(f=>f[1]),b=rows(k).map(r=>m.f.map(f=>'"'+String(f[2]=="ref"?lab(f[3],r.data[f[0]]):r.data[f[0]]??"").replace(/"/g,'""')+'"').join(","));
+const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([[h.join(","),...b].join("\n")],{type:"text/csv"}));a.download=k+".csv";a.click()}
+function pipe(){const L=rows("leads");if(!L.length)return `<div class="card em">No leads yet. Add leads, then move them through the pipeline here.</div>`;
+return `<div class="kb">`+PS.map(s=>{const c=L.filter(l=>l.data.status==s),t=c.reduce((a,l)=>a+Number(l.data.value||0),0);
+return `<div class="col" ondragover="event.preventDefault()" ondrop="mv(event,'${s}')"><h4>${s} · ${c.length} · ${kes(t)}</h4>${c.map(l=>`<div class="ct" draggable="true" ondragstart="event.dataTransfer.setData('t','${l.id}')"><b onclick="edit('leads','${l.id}')" style="cursor:pointer">${esc(l.data.business)}</b><small>${kes(l.data.value)} · ${esc(l.data.priority||"")}</small><select onchange="mvId('${l.id}',this.value)">${PS.map(o=>`<option ${o==s?"selected":""}>${o}</option>`).join("")}</select></div>`).join("")}</div>`}).join("")+`</div>`}
+const mv=(e,s)=>{e.preventDefault();mvId(e.dataTransfer.getData("t"),s)};
+async function mvId(id,s){const l=rows("leads").find(x=>x.id==id);if(!l||l.data.status==s)return;const {error}=await db.from("records").update({data:{...l.data,status:s}}).eq("id",id);if(error)return toast(error.message);await load();draw()}
+function ov(){const L=rows("leads"),mo=new Date().toISOString().slice(0,7),sum=(a,f)=>a.reduce((t,r)=>t+Number(r.data[f]||0),0),td=new Date().toISOString().slice(0,10),h=new Date().getHours();
+const contacted=L.filter(l=>LS.indexOf(l.data.status)>=4&&!["Not Interested","Do Not Contact"].includes(l.data.status)).length,
+opp=L.filter(l=>["Interested","Meeting Scheduled","Proposal Sent","Negotiation"].includes(l.data.status)).length,
+cl=rows("clients").filter(c=>c.data.status=="Active").length,
+rev=sum(rows("payments").filter(p=>(p.data.date||p.created_at||"").startsWith(mo)),"amount"),
+out=sum(rows("invoices").filter(i=>i.data.status!="Cancelled"&&i.data.status!="Draft"),"amount")-sum(rows("payments"),"amount"),
+K=[["Total Leads",L.length],["Leads Contacted",contacted],["Active Opportunities",opp],["Active Clients",cl],["Revenue This Month",kes(rev)],["Outstanding Payments",kes(Math.max(out,0))]],
+tk=rows("tasks").filter(t=>!["Completed","Cancelled"].includes(t.data.status)&&t.data.due).sort((a,b)=>a.data.due>b.data.due?1:-1).slice(0,6),
+fu=L.filter(l=>l.data.follow&&l.data.follow<=td&&!["Won","Lost","Not Interested","Do Not Contact"].includes(l.data.status)),
+mx=Math.max(1,...PS.map(s=>L.filter(l=>l.data.status==s).length));
+return `<p style="color:var(--t2);margin:-8px 0 14px">${h<12?"Good morning":h<18?"Good afternoon":"Good evening"}. Here's what's happening at Clickwave Digital.</p><div class="grid">${K.map(k=>`<div class="card kpi"><span>${k[0]}</span><b>${k[1]}</b></div>`).join("")}</div>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))"><div class="card"><h4 style="margin-bottom:10px">Sales funnel</h4>${L.length?PS.map(s=>{const n=L.filter(l=>l.data.status==s).length;return `<div style="margin-bottom:8px;font-size:12px;color:var(--t2)">${s} · ${n}<div class="fb" style="width:${n/mx*100}%;min-width:2px"></div></div>`}).join(""):`<div class="em">Add your first lead to see the funnel.</div>`}</div>
+<div class="card"><h4 style="margin-bottom:10px">Follow-ups due (${fu.length})</h4>${fu.length?fu.slice(0,6).map(l=>`<p style="padding:6px 0;cursor:pointer" onclick="edit('leads','${l.id}')">${esc(l.data.business)} <span class="tag" style="color:${l.data.follow<td?"var(--er)":"var(--wa)"}">${l.data.follow}</span></p>`).join(""):`<div class="em">Nothing due.</div>`}</div>
+<div class="card"><h4 style="margin-bottom:10px">Upcoming tasks</h4>${tk.length?tk.map(t=>`<p style="padding:6px 0;cursor:pointer" onclick="edit('tasks','${t.id}')">${esc(t.data.title)} <span class="tag" style="color:${t.data.due<td?"var(--er)":"var(--t2)"}">${t.data.due}</span></p>`).join(""):`<div class="em">No open tasks.</div>`}</div></div>`}
+function sett(){return `<div class="card"><h4>Account</h4><p style="color:var(--t2);margin:8px 0">${esc(user.email)}</p><p style="color:var(--t3)">Default currency: KES · Time zone: Africa/Nairobi</p></div><div class="card" style="margin-top:12px"><h4>Integrations</h4><p style="color:var(--t3);margin-top:8px">None connected yet (WhatsApp, email, payments, AI, ad platforms).</p></div>`}
+let last;db.auth.onAuthStateChange((ev,s)=>{const i=s?.user?.id||"";if(i===last)return;last=i;setTimeout(()=>boot(s).catch(e=>toast("Error: "+e.message)),0)});window.onerror=(m)=>toast("Error: "+m);
+if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js");
+</script></body></html>
