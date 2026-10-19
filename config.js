@@ -1,0 +1,1 @@
+const SUPA_URL="https://ofbsemuqdiyirstocejf.supabase.co",SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9mYnNlbXVxZGl5aXJzdG9jZWpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0Mjg1MjMsImV4cCI6MjEwODAwNDUyM30.OtM4pfrk218wNHilM27kX8_svu-BCpYChmGOwS8udic";
